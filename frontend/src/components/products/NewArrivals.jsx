@@ -119,12 +119,7 @@ const NewArrivals = () => {
       setCanScrollRight(rightScrollable);
     }
 
-    console.log({
-      scrollLeft:container.scrollLeft,
-      clientWidth:container.clientWidth,
-      containerScrollWidth : container.scrollWidth,
-      
-    })
+    
   }
 
   useEffect(() => {
@@ -150,7 +145,7 @@ const NewArrivals = () => {
   }
 
   const handleOnMouseUpOrLeave = () => {
-    setIsDragging = false;
+    setIsDragging(false);
 
   }
   
