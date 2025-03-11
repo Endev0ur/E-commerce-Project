@@ -177,7 +177,167 @@ router.delete("/:id" , protect , admin , async (req , res)=> {
     console.log(error);
     res.status(500).send("Server error");
   }
+});
+
+
+
+// @route GET /api/aproducts
+// @desc get all the product with option query filters
+//access public
+
+router.get("/" , async (req , res)=>{
+  try{  
+    const {collections , sizes , colors , gender , minPrice , maxPrice , sortBy , search , category , material , brand , limit} = req.query;
+
+    let query = {}
+    //first need to apply filter in login based on the query parameters
+
+    if(collections && collections.toLocaleLowerCase() !== "all"){
+      query.collections = collections;
+    }
+
+    if(category && category.toLocaleLowerCase() !== "all"){
+      query.category = category;
+    }
+
+    if(material){
+      query.material= {$in : material.split(",")}
+    }
+
+    if(brand){
+      query.brand= {$in : brand.split(",")}
+    }
+    if(sizes){
+      query.sizes= {$in : sizes.split(",")}
+    }
+    if(colors){
+      query.colors = {$in : [colors]};
+    }
+
+
+    if(gender){
+      query.gender = gender;
+    }
+
+    if(minPrice || maxPrice) {
+      query.price = {};
+      if(minPrice){
+        query.price.$gte = Number(minPrice);
+      }
+      if(maxPrice){
+        query.price.$lte = Number(maxPrice);
+      }
+    }
+
+    if(search){
+      query.$or = [
+        {
+          name : {$regex : search , $options : "i"}
+        },
+        {
+          description: {$regex : search , $options : "i"}
+        }
+      ]
+    }
+
+    // sort logic based on query parameter
+    let sort= {};
+    if(sortBy){
+      switch(sortBy){
+        case "priceAsc" : 
+          sort={price:1};
+          break;
+        case "priceDesc":
+          sort = {price:-1};
+          break;
+        case "popularity":
+          sort = {rating:-1};
+          break;
+        default:
+          break;
+      }
+    }
+
+
+    //fetch products and apply sorting and limit
+
+    let products = await Product.find(query).sort(sort).limit(Number(limit) || 0);
+    res.json(products);
+
+
+
+  }catch(err){
+    console.error(err);
+    res.status(500).json("server Error");
+  }
+});
+
+/* let's work on getting the single product detail */
+/* 
+
+  @route GET /api/products/:id
+  desc get a sigle product by id
+  access public
+
+*/
+
+router.get("/:id" , async (req , res)=>{
+  try{
+    const product = await Product.findById(req.params.id);
+    if(product){
+      res.json(product);
+    }else{
+      res.status(404).json({
+        message:"Product Not Found"
+      })
+    }
+  }
+  catch(err){
+    console.error(err);
+    res.status(500).json("Server error");
+  }
 })
+
+/* 
+  display the similar products
+
+  @route GET /api/product/similar/:id
+  desc : Retrieve similar products based on the currect product's gender and category
+  access public
+
+*/
+
+router.get("/similar/:id" , async (req , res)=> {
+  const {id} = req.params;
+  console.log(id);
+
+  try {
+    const product = await Product.findById(id);
+
+    if(!product){
+      return res.status(404).json({
+        message : "Product not found",
+      })
+
+    }
+    const similarProducts = await Product.find({
+      _id : {$ne : id},//exclude the current product ID,
+      gender : product.gender,
+      category : product.category,
+    }).limit(4);
+
+    res.json(similarProducts);
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).json({
+      message : "Server Error",
+    })
+  }
+})
+
+
+
 
 
 module.exports = router;
