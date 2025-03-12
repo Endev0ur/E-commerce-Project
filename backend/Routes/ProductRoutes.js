@@ -270,7 +270,60 @@ router.get("/" , async (req , res)=>{
     console.error(err);
     res.status(500).json("server Error");
   }
+
 });
+
+
+
+/* 
+  @route GET /api/products/best-seller
+  desc retieve the product with hightes rating
+  access public
+*/
+
+router.get("/best-seller" , async (req  , res)=>{
+  try{
+    const bestSeller = await Product.findOne().sort({rating:-1});
+    if(bestSeller){
+      res.json(bestSeller)
+    }else{
+      res.status(404).json({
+        message:"No best seller found !"
+      })
+    }
+  }
+  catch(err){
+    console.error(err);
+    res.status(500).json({
+      message : "Server errror",
+    })
+  }
+})
+
+/*
+ lets work on new arrivals
+
+ @route GET /api/products/new-arrivals
+ desc Retreive latest 8 products - creation date
+ access public
+*/
+
+router.get("/new-arrival" , async (req , res)=>{
+  try{
+    //fetch latest 8 products
+    const newArrivals = await Product.find().sort({createdAt:-1}).limit(8);
+    res.json(newArrivals);
+  }catch(err){
+    console.error(err);
+    res.status(500).json({
+      message : "Server error",
+    })
+  }
+})
+
+
+
+
 
 /* let's work on getting the single product detail */
 /* 
@@ -297,6 +350,12 @@ router.get("/:id" , async (req , res)=>{
     res.status(500).json("Server error");
   }
 })
+
+
+
+
+
+
 
 /* 
   display the similar products
