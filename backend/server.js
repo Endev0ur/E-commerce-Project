@@ -4,7 +4,8 @@ const dotenv = require("dotenv");
 const connectDB = require('./config/db');
 const { connect } = require("mongoose");
 const userRoutes = require('./Routes/UserRoutes')
-const productRoute  = require('./Routes/ProductRoutes')
+const productRoute  = require('./Routes/ProductRoutes');
+const cartRoutes = require("./Routes/cartRoutes");
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.get("/" , (req , res)=>{
 // api routes 
 app.use("/api/users" , userRoutes);
 app.use("/api/products" , productRoute);
+app.use("/api/cart" , cartRoutes);
 
 
 app.listen(PORT , ()=>{
