@@ -7,7 +7,9 @@ const userRoutes = require('./Routes/UserRoutes')
 const productRoute  = require('./Routes/ProductRoutes');
 const cartRoutes = require("./Routes/cartRoutes");
 const checkoutRoutes = require("./Routes/checkoutRoutes")
-const orderRoutes = require('./Routes/orderRoutes')
+const orderRoutes = require('./Routes/orderRoutes');
+const uploadRoutes = require('./Routes/uploadRoutes');
+
 
 const app = express();
 app.use(express.json());
@@ -30,6 +32,7 @@ app.use("/api/products" , productRoute);
 app.use("/api/cart" , cartRoutes);
 app.use("/api/checkout" , checkoutRoutes);
 app.use("/api/orders" , orderRoutes);
+app.use("/api/upload" , uploadRoutes);
 
 
 app.listen(PORT , ()=>{
