@@ -9,6 +9,8 @@ const cartRoutes = require("./Routes/cartRoutes");
 const checkoutRoutes = require("./Routes/checkoutRoutes")
 const orderRoutes = require('./Routes/orderRoutes');
 const uploadRoutes = require('./Routes/uploadRoutes');
+const subscriberRoutes = require('./Routes/subscriberRoutes');
+
 
 
 const app = express();
@@ -33,6 +35,7 @@ app.use("/api/cart" , cartRoutes);
 app.use("/api/checkout" , checkoutRoutes);
 app.use("/api/orders" , orderRoutes);
 app.use("/api/upload" , uploadRoutes);
+app.use("/api" , subscriberRoutes);
 
 
 app.listen(PORT , ()=>{
