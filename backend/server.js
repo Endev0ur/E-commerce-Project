@@ -10,6 +10,10 @@ const checkoutRoutes = require("./Routes/checkoutRoutes")
 const orderRoutes = require('./Routes/orderRoutes');
 const uploadRoutes = require('./Routes/uploadRoutes');
 const subscriberRoutes = require('./Routes/subscriberRoutes');
+const AdminRoutes = require('./Routes/AdminRoutes');
+const productAdminRoute = require("./Routes/productAdminRoute")
+const adminOrderRoutes = require("./Routes/adminOrderRoutes")
+
 
 
 
@@ -36,6 +40,12 @@ app.use("/api/checkout" , checkoutRoutes);
 app.use("/api/orders" , orderRoutes);
 app.use("/api/upload" , uploadRoutes);
 app.use("/api" , subscriberRoutes);
+
+
+//admin routes
+app.use("/api/admin/users" , AdminRoutes);
+app.use("/api/admin/products" , productAdminRoute);
+app.use("/api/admin/orders" , adminOrderRoutes);
 
 
 app.listen(PORT , ()=>{
