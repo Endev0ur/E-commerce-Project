@@ -90,7 +90,7 @@ const adminSlice = createSlice({
       state.loading = true;
       state.error = null;
     })
-    .addCase(addUser.pending ,(state , action) => {
+    .addCase(addUser.fulfilled ,(state , action) => {
       state.loading = false;
       state.users.push(action.payload.user)//add a new user to the state
     })
