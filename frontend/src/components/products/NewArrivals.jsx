@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FiChevronLeft , FiChevronRight } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
+import axios from 'axios';
 
 
 const NewArrivals = () => {
@@ -14,91 +15,21 @@ const NewArrivals = () => {
 
 
 
-  const newArrivals = [
-    {
-      _id:"1",
-      name:"Stylish Jacket",
-      price:120,
-      images:[
-        {
-          url:"https://picsum.photos/500/500?random=1",
-          altText:"Stylish Jacket",
-        }
-      ]
-    },
+  const [newArrivals , setNewArrivals] = useState([]);
 
-    {
-      _id:"2",
-      name:"Stylish Jackets",
-      price:120,
-      images:[
-        {
-          url:"https://picsum.photos/500/500?random=2",
-          altText:"Stylish Jacket",
-        }
-      ]
-    },
-
-    {
-      _id:"3",
-      name:"Stylish Jacket",
-      price:120,
-      images:[
-        {
-          url:"https://picsum.photos/500/500?random=3",
-          altText:"Stylish Jacket",
-        }
-      ]
-    },
-
-    {
-      _id:"4",
-      name:"Stylish Jacket",
-      price:120,
-      images:[
-        {
-          url:"https://picsum.photos/500/500?random=5",
-          altText:"Stylish Jacket",
-        }
-      ]
-    },
-
-    {
-      _id:"5",
-      name:"Stylish Jacket",
-      price:120,
-      images:[
-        {
-          url:"https://picsum.photos/500/500?random=4",
-          altText:"Stylish Jacket",
-        }
-      ]
-    },
-
-    {
-      _id:"6",
-      name:"Stylish Jacket",
-      price:120,
-      images:[
-        {
-          url:"https://picsum.photos/500/500?random=6",
-          altText:"Stylish Jacket",
-        }
-      ]
-    },
-
-    {
-      _id:"7",
-      name:"Stylish Jacket",
-      price:120,
-      images:[
-        {
-          url:"https://picsum.photos/500/500?random=7",
-          altText:"Stylish Jacket",
-        }
-      ]
-    },
-  ]
+  useEffect(() => {
+    const fetchNewArrivals = async() => {
+      try{
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/new-arrival`)
+        setNewArrivals(response.data);
+      }catch(err){
+        console.error(err);
+        
+      }
+    };
+    fetchNewArrivals();
+  } , []);
+  
 
   const scroll = (direction) => {
     const scrollAmount = direction==="left"?-300:300;
@@ -129,7 +60,7 @@ const NewArrivals = () => {
       updateScrollButtons();
       return ()=> container.removeEventListener("scroll" , updateScrollButtons);
     }
-  })
+  } , [newArrivals])
 
   const handleOnMouseDown = (e) => {
     setIsDragging(true);

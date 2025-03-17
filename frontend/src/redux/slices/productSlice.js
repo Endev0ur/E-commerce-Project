@@ -19,17 +19,17 @@ export const fetchProductsByFilters = createAsyncThunk("products/fetchByFilters"
 })=>{
   const query = new URLSearchParams();
   if(collection) query.append("collection" , collection);
-  if(size) query.append("collection" ,size);
-  if(color) query.append("collection" ,color);
-  if(gender) query.append("collection" , gender);
-  if(minPrice) query.append("collection" , minPrice);
-  if(maxPrice) query.append("collection" , maxPrice);
-  if(sortBy) query.append("collection" , sortBy);
-  if(search) query.append("collection" , search);
-  if(category) query.append("collection" , category);
-  if(material) query.append("collection" , material);
-  if(brand) query.append("collection" , brand);
-  if(limit) query.append("collection" , limit);
+  if(size) query.append("size" ,size);
+  if(color) query.append("color" ,color);
+  if(gender) query.append("gender" , gender);
+  if(minPrice) query.append("minPrice" , minPrice);
+  if(maxPrice) query.append("maxPrice" , maxPrice);
+  if(sortBy) query.append("sortBy" , sortBy);
+  if(search) query.append("search" , search);
+  if(category) query.append("category" , category);
+  if(material) query.append("material" , material);
+  if(brand) query.append("brand" , brand);
+  if(limit) query.append("limit" , limit);
 
 
   const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products?${query.toString()} `);
@@ -39,12 +39,14 @@ export const fetchProductsByFilters = createAsyncThunk("products/fetchByFilters"
 //async thunk to fetch a single prodct by id
 
 export const fetchProductDetails = createAsyncThunk("products/fetchProductDetails" , async ({id}) => {
-  const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/product/${id}`);
+  const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`);
+  console.log("API response for the product details : " , response.data);
   return response.data;
 })
 
 //async thunk to update product
 export const updateProduct = createAsyncThunk("products/updateProduct" , async ({id , productData}) => {
+  const token = localStorage.getItem("userToken")
   const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/products/${id}` , productData , {
     headers:{
       Authorization:`Bearer ${localStorage.getItem("userToken")}`,
@@ -128,7 +130,7 @@ const productSlice = createSlice({
     })
     .addCase(fetchProductDetails.fulfilled , (state , action)=>{
       state.loading = false;
-      state.selectedProduct=action.payload
+      state.selectedProduct=action.payload;
     })
     .addCase(fetchProductDetails.rejected , (state ,action)=>{
       state.loading = false;
@@ -160,7 +162,7 @@ const productSlice = createSlice({
     })
     .addCase(fetchSimilarProducts.fulfilled , (state , action)=>{
       state.loading = false;
-      state.products=action.payload;
+      state.similarProducts=action.payload;
     })
     .addCase(fetchSimilarProducts.rejected , (state ,action)=>{
       state.loading = false;

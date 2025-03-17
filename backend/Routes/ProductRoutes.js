@@ -336,7 +336,8 @@ router.get("/new-arrival" , async (req , res)=>{
 
 router.get("/:id" , async (req , res)=>{
   try{
-    const product = await Product.findById(req.params.id);
+    const {id} = req.params;
+    const product = await Product.findById(id);
     if(product){
       res.json(product);
     }else{
