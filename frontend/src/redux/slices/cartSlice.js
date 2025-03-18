@@ -77,7 +77,7 @@ export const removeFromCart = createAsyncThunk("cart/removeFromCart" , async({pr
 
 //merge guest cart into user cart
 
-export const mergeCart = createAsyncThunk("cart/mergeCart" , async ({guestId , user} , {rejectWithValue})=>{
+export const mergeCart = createAsyncThunk("cart/mergeCart" , async ({guestId} , {rejectWithValue})=>{
   try{
     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/cart/merge` , {guestId , user} , {
       headers:{
@@ -155,23 +155,23 @@ const cartSlice = createSlice({
       saveCartToStorage(action.payload);
     })
     .addCase(updateCartItemQuantity.rejected , (state ,action)=>{
-      state.loading = false,
+      state.loading = false;
       state.error = action.payload?.message || "Failed to update item quantity";
     })
 
 
 
     .addCase(removeFromCart.pending , (state)=>{
-      state.loading = true,
+      state.loading = true;
       state.error = null;
     })
     .addCase(removeFromCart.fulfilled , (state ,action)=>{
-      state.loading = false,
+      state.loading = false;
       state.cart = action.payload;
       saveCartToStorage(action.payload);
     })
     .addCase(removeFromCart.rejected , (state ,action)=>{
-      state.loading = false,
+      state.loading = false;
       state.error = action.payload?.message || "Failed to remove item";
     })
 
@@ -180,12 +180,12 @@ const cartSlice = createSlice({
       state.error = null;
     })
     .addCase(mergeCart.fulfilled , (state ,action)=>{
-      state.loading = false,
+      state.loading = false;
       state.cart = action.payload;
       saveCartToStorage(action.payload);
     })
     .addCase(mergeCart.rejected , (state ,action)=>{
-      state.loading = false,
+      state.loading = false;
       state.error = action.payload?.message || "Failed to fetch cart";
     })
   }
