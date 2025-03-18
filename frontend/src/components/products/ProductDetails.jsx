@@ -17,7 +17,6 @@ const ProductDetails = ({productId}) => {
   const {selectedProduct , loading , error , similarProducts} =useSelector((state)=>state.products
   );
 
-  console.log(selectedProduct);
 
   const {user , guestId} = useSelector((state)=>state.auth);
 
@@ -44,7 +43,6 @@ const ProductDetails = ({productId}) => {
     }
   },[selectedProduct])
 
-  console.log(selectedProduct)
 
   const handleQuantityChange = (action) => {
     if(action==="plus"){
@@ -64,6 +62,15 @@ const ProductDetails = ({productId}) => {
     }
 
     setIsButtonDisabled(true);
+
+    console.log("Dispatching Add to Cart: ", {
+      productId: productFetchId,
+      quantity,
+      size: selectedSize,
+      color: selectedColor,
+      guestId,
+      userId: user?._id,
+    });
 
     dispatch(
       addToCart({

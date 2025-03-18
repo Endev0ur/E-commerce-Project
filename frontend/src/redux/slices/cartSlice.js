@@ -1,10 +1,10 @@
-import { createSlice , createAsyncThunk} from "@reduxjs/toolkit";
+import { createSlice , createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 //helper function to load cart from localStorage
 const loadCartFromStorage = () => {
   const storedCart = localStorage.getItem("cart");
-  return storedCart ? JSON.parse(storedCart) : {products:[]};
+  return storedCart ? JSON.parse(storedCart) : { products:[] };
 };
 
 
@@ -20,15 +20,15 @@ export const fetchCart = createAsyncThunk("cart/fetchCart" , async ({userId , gu
       params:{userId , guestId},
     });
     return response.data;
-  }catch(err){
-    console.error(err);
-    return rejectWithValue(err.response.data);
+  }catch(error){
+    console.error(error);
+    return rejectWithValue(error.response.data);
   }
 })
 
 
 //add an item to the cart for a user or guest
-export const addToCart = createAsyncThunk("cart/adToCart" , async ({productId , quantity , size , color , guestId , userId} , {rejectWithValue})=>{
+export const addToCart = createAsyncThunk("cart/addToCart" , async ({productId , quantity , size , color , guestId , userId} , {rejectWithValue})=>{
   try{
     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/cart` , {
       productId , quantity , size , color , guestId , userId
@@ -36,8 +36,8 @@ export const addToCart = createAsyncThunk("cart/adToCart" , async ({productId , 
 
 
     return response.data;
-  }catch(err){
-    return rejectWithValue(err.response)
+  }catch(error){
+    return rejectWithValue(error.response.data)
   }
 })
 
@@ -55,8 +55,8 @@ export const updateCartItemQuantity = createAsyncThunk("cart/updateCartItemQuant
 
     return response.data;
   }
-  catch(err){
-    return rejectWithValue(err.response.data);
+  catch(error){
+    return rejectWithValue(error.response.data);
   }
 });
 
@@ -70,8 +70,8 @@ export const removeFromCart = createAsyncThunk("cart/removeFromCart" , async({pr
     })
 
     return response.data;
-  }catch(err){
-    return rejectWithValue(err.response.data);
+  }catch(error){
+    return rejectWithValue(error.response.data);
   }
 });
 
@@ -106,7 +106,7 @@ const cartSlice = createSlice({
     clearCart:(state)=>{
       state.cart = {products:[]};
       localStorage.removeItem("cart");
-    }
+    },
   },
   extraReducers:(builder)=>
   {
@@ -132,7 +132,9 @@ const cartSlice = createSlice({
     })
     .addCase(addToCart.fulfilled , (state ,action)=>{
       state.loading = false,
+      
       state.cart = action.payload;
+      console.log(action.payload);
       saveCartToStorage(action.payload);
     })
     .addCase(addToCart.rejected , (state ,action)=>{
@@ -147,7 +149,8 @@ const cartSlice = createSlice({
       state.error = null;
     })
     .addCase(updateCartItemQuantity.fulfilled , (state ,action)=>{
-      state.loading = false,
+      state.loading = false;
+      
       state.cart = action.payload;
       saveCartToStorage(action.payload);
     })

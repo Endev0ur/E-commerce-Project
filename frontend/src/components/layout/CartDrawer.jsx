@@ -2,13 +2,24 @@
 import { IoMdClose } from "react-icons/io";
 import CartContents from "../cart/CartContents";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const CartDrawer = ({drawerOpen , toggleCartDrawer}) => {
 
   const navigateTo = useNavigate();
+  const {user , guestId} = useSelector((state)=>state.auth);
+  const {cart} = useSelector((state)=>state.cart);
+  const userId = user ? user._id : null;
+  console.log("This is  user id  : " , userId);
+  console.log(cart , " " , user , " , " , guestId);
   const handleCheckOut = () => {
     toggleCartDrawer();
-    navigateTo("/checkout");
+    if(!user){
+      navigateTo("login?redirect=checkout");
+    }else{
+      navigateTo("/checkout");
+    }
+    
   }
   
 
@@ -27,15 +38,23 @@ const CartDrawer = ({drawerOpen , toggleCartDrawer}) => {
       <div className="flex-grow p-4 overflow-y-auto">
         <h2 className="text-xl font-semibold mb-4">Your cart</h2>
         {/* component for cart content  */}
-        <CartContents></CartContents>
+        {cart && cart?.products?.length > 0 ? (<CartContents cart={cart} userId={userId} guestId={guestId}></CartContents>):(
+          <p>Your Cart is Empty</p>
+        )}
+        
 
       </div>
 
       {/* checkout button  */}
 
       <div className="p-4 bg-white sticky b-0">
-        <button onClick={handleCheckOut} className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition">checkout</button>
-        <p className="text-sm tracking-tighter text-gray-500 mt-2 text-center">shipping , tazes and discount codes calculated at checkouts</p>
+        {cart && cart?.products?.length > 0 && (
+          <>
+            <button onClick={handleCheckOut} className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition">checkout</button>
+            <p className="text-sm tracking-tighter text-gray-500 mt-2 text-center">shipping , tazes and discount codes calculated at checkouts</p>
+          </>
+        )}
+        
       </div>
 
     </div>

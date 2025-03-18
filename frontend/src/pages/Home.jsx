@@ -42,7 +42,6 @@ const Home = () => {
 
   } , [dispatch])
 
-  console.log(bestSellerProducts);
   
 
   return (

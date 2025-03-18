@@ -1,7 +1,27 @@
 import React from 'react'
 import MyOrders from './MyOrders'
+import { useNavigate } from 'react-router-dom'
+
+
+
+
+
 
 const Profile = () => {
+
+  const navigateTo = useNavigate();
+
+  const handleLogOut = () => {
+    localStorage.removeItem("cart");
+    localStorage.removeItem("__paypal_storage");
+    localStorage.removeItem("guestId");
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("userToken");
+    navigateTo("/");
+  }
+
   return (
     <div className='min-h-screen flex flex-col'>
       <div className="flex-grow container mx-auto p-4 md:p-6">
@@ -13,7 +33,7 @@ const Profile = () => {
               john@email.com
             </p>
 
-            <button className='w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600'>Logout</button>
+            <button className='w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600' onClick={handleLogOut}>Logout</button>
           </div>
 
           {/* right section */}

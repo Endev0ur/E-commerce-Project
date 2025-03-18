@@ -16,11 +16,16 @@ access public
 //helper function to get a cart by userid or guest id
 
 const getCart = async (userId , guestId) => {
+  console.log("userid is : " , userId);
+  console.log("guestId is ; " , guestId)
   if(userId){
-    return await Cart.findOne({user:userId});
+    
+    const mila =  await Cart.findOne({user:userId});
+    console.log("mila is : " , mila);
   }
-  else if(guestId){
-    return await Cart.findOne({guestId});
+  if(guestId){
+    
+    return await Cart.findOne({ guestId });
   }
   return null;
 }
@@ -34,9 +39,11 @@ router.post("/" , async (req , res)=>{
       message : "Product not found"
     })
 
-    //determine if the user is logged in or guest
-
+    //determine if the user is logged in or guestid
+    console.log("userid is : " , userId);
+    console.log("guestId is ; " , guestId);
     let cart = await getCart(userId , guestId);
+    console.log("cart in backend is ; ====================================================================================================================================================================================================" , cart);
 
     //if the cart exist update it
     if(cart){
@@ -49,12 +56,13 @@ router.post("/" , async (req , res)=>{
         
         //if the product already exist update the quantity
         cart.products[productIndex].quantity+=quantity;
-      }else{
+      }
+      else{
         //the product is not present in the cart so add the new product
         cart.products.push({
           productId,
           name:product.name,
-          images:product.images[0].url,
+          image:product.images[0].url,
           price:product.price,
           size,
           color,
@@ -162,6 +170,7 @@ router.put("/" , async(req , res)=>{
 router.delete("/" , async (req , res)=> {
   const {productId , size , color , guestId , userId} = req.body;
 
+
   try{
 
     let cart = await getCart(userId , guestId);
@@ -172,6 +181,8 @@ router.delete("/" , async (req , res)=> {
         message : "cart not found"
       });
     }
+
+    console.log("this is backend" , cart);
 
     const productIndex = cart.products.findIndex((p)=>p.productId.toString()===productId && p.size===size && p.color===color);
 
@@ -251,7 +262,7 @@ router.post("/merge" , protect , async(req , res)=> {
     const userCart = await Cart.findOne({user:req.user._id});
 
     if(guestCart){
-      if(guestCart.products.lenght===0){
+      if(guestCart.products.length===0){
         return res.status(400).json({
           message : "Guest cart is empty",
         })
@@ -271,7 +282,7 @@ router.post("/merge" , protect , async(req , res)=> {
           }
           else{
             // otherwise add the guest item to the cart
-            userCart.products.push(guestItems);
+            userCart.products.push(guestItem);
           }
         });
 
