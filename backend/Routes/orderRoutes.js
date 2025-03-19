@@ -38,7 +38,7 @@ router.get("/my-orders" , protect , async (req , res)=> {
 
 router.get("/:id" , protect , async (req , res)=> {
   try{
-    const order = await Order.findById(req.params.id).popilate("user" , "name" , "email");
+    const order = await Order.findById(req.params.id).populate("user" , "name email");
 
     if(!order){
       return res.status(401).json({
@@ -49,6 +49,7 @@ router.get("/:id" , protect , async (req , res)=> {
     res.json(order);
   }
   catch(err){
+    console.log("helo")
     console.log(err);
     res.status(500).json({
       message : "server error occur in order routes : /api/order/:id"
