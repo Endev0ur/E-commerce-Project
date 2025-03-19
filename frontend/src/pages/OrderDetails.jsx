@@ -1,47 +1,30 @@
-import React, {useState , useEffect } from 'react'
+import React, {useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom';
+import { fetchOrderDetails } from '../redux/slices/orderSlice';
 
 const OrderDetails = () => {
 
   const {id} = useParams();
-  const [orderDetails , setOrderDetails] = useState(null);
+  
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const mockOrderDetails = {
-      _id:id,
-      createdAt:new Date(),
-      isPaid:true,
-      isDelivered : false,
-      paymentMethod:"PayPal",
-      shippingMethod:"Standard",
-      shippingAddress:{city:"New Delhi" , country:"INDIA"},
-      orderItems:[
-        {
-          productId:"2",
-          name:"shirt",
-          price:150,
-          quantity:2,
-          image:"https://picsum.photos/150?random=1",
-        },
-        {
-          productId:"2",
-          name:"shirt",
-          price:150,
-          quantity:2,
-          image:"https://picsum.photos/150?random=1",
-        },
-        {
-          productId:"2",
-          name:"shirt",
-          price:150,
-          quantity:2,
-          image:"https://picsum.photos/150?random=1",
-        },
-      ]
-    };
-    setOrderDetails(mockOrderDetails);
-  } , [id]);
+  const {orderDetails , loading , error} = useSelector((state)=>state.orders);
+
+  useEffect(()=>{
+    dispatch(fetchOrderDetails(id));
+
+  } , [dispatch , id]);
+
+  if(loading){
+    return <p>Loading..</p>
+
+  }
+
+  if(error){
+    return <p>Error : {error}</p>;
+  }
   
 
   return (
