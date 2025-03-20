@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import PayPalButton from './PayPalButton';
 import {useDispatch, useSelector} from 'react-redux'
 import { createCheckout } from '../../redux/slices/checkoutSlice';
+import axios from 'axios'
 
 
 const Checkout = () => {
@@ -23,7 +24,7 @@ const Checkout = () => {
     country:"",
     phone:"",
   })
-  const [checkoutId , setCheckoutId] = useState(null)
+  
 
   // ensure that cart is not loading before proceeding
   useEffect(()=>{
@@ -32,36 +33,57 @@ const Checkout = () => {
     }
   } , [cart ,navigateTo])
 
+  const [checkoutId , setCheckoutId] = useState(null);
 
   const handleCreateCheckout = async (e) => {
     e.preventDefault();
     // console.log("dispatching checkout with cart : " , cart);
+    // console.log("handle create checkout =============================================================================");
+    console.log(cart);
     if(cart && cart.products.length>0){
       const res = await  dispatch(createCheckout({
-        checkoutItems : cart.products,
-        shippingAddress,
-        paymentMethod:"PayPal",
-        totalPrice:cart.totalPrice,
-      })
-    );
+          checkoutItems : cart.products,
+          shippingAddress,
+          paymentMethod:"PayPal",
+          totalPrice:cart.totalPrice,
+        })
+      );
 
+    // console.log("success or failue =================================================================================================================" , res.payload._id);
     // console.log("After dispactching checkout" , res);
-    if(res.payload && res.payload._id){
-      setCheckoutId(res.payload._id);
+      if(res.payload && res.payload._id){
+        setCheckoutId(res.payload._id);
+        console.log(checkoutId ," , ",res.payload._id);
+      }
+    
     }
-    }
+
+    // console.log("checkoutId is : " , checkoutId);
   }
 
+  console.log("checkout" , checkoutId);
+
+  useEffect(() => {
+    if (checkoutId) {
+      console.log("Checkout ID updated:", checkoutId);
+    }
+  }, [checkoutId]);
+
   const handlePaymentSuccess = async (details) => {
+    
     try{
-      const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}pay` , 
-        {paymentStatus : "paid" , paymentDetails : details} , 
+      console.log("details : " , details);
+      const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/pay`, 
+
+        { paymentStatus : "paid" , paymentDetails : details} , 
         {
           headers:{
-            Authoriazation : `Bearer ${localStorage.getItem("userToken")}`
+            Authorization : `Bearer ${localStorage.getItem("userToken")}`
           }
         }
       );
+
+      console.log("why");
 
       
       await handleFinalizeCheckout(checkoutId)//finalize checkout if payment is successfull
@@ -75,7 +97,7 @@ const Checkout = () => {
     try{
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/finalize` , {} , {
         headers:{
-          Authoriazation:`Bearer ${localStorage.getItem("userToken")}`
+          Authorization:`Bearer ${localStorage.getItem("userToken")}`
         }
       });
       navigateTo("/order-confirmation");

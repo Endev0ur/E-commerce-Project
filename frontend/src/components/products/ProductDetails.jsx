@@ -9,6 +9,7 @@ import { addToCart } from '../../redux/slices/cartSlice';
 
 
 
+
 const ProductDetails = ({productId}) => {
 
   const {id} = useParams();
