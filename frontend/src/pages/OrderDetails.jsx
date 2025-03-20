@@ -7,10 +7,14 @@ import { fetchOrderDetails } from '../redux/slices/orderSlice';
 const OrderDetails = () => {
 
   const {id} = useParams();
+  console.log("id is ; I i I i I" , id);
   
   const dispatch = useDispatch();
 
   const {orderDetails , loading , error} = useSelector((state)=>state.orders);
+
+
+  console.log(orderDetails);
 
   useEffect(()=>{
     dispatch(fetchOrderDetails(id));
@@ -99,7 +103,7 @@ const OrderDetails = () => {
                         ${item.price}
                       </td>
                       <td className="py-2 px-4 ">
-                        ${item.quantity}
+                        {item.quantity}
                       </td>
                       <td className="py-2 px-4 ">
                         ${item.price*item.quantity}
