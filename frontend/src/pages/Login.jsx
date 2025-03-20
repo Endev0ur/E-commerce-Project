@@ -24,13 +24,24 @@ const Login = () => {
 
   useEffect(()=> {
     if(user){
-      if(cart?.products.length>0 && guestId){
-        dispatch(mergeCart({guestId , user})).then(()=>{
-          navigateTo(isCheckoutRedirect ? "/checkout" : "/");
-        });
-      }else{
+
+      const handleNavigation = async () => {
+        if (cart?.products.length > 0 && guestId) {
+          await dispatch(mergeCart({ guestId, user })); // Ensure mergeCart completes
+        }
         navigateTo(isCheckoutRedirect ? "/checkout" : "/");
-      }
+      };
+  
+      handleNavigation();
+      
+
+      // if(cart?.products.length>0 && guestId){
+      //    dispatch(mergeCart({guestId , user})).then(()=>{
+      //     navigateTo(isCheckoutRedirect ? "/checkout" : "/");
+      //   });
+      // }else{
+      //   navigateTo(isCheckoutRedirect ? "/checkout" : "/");
+      // }
     }
   } , [user , guestId , cart , navigateTo , isCheckoutRedirect , dispatch])
 

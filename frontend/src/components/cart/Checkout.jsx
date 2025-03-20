@@ -4,6 +4,7 @@ import PayPalButton from './PayPalButton';
 import {useDispatch, useSelector} from 'react-redux'
 import { createCheckout } from '../../redux/slices/checkoutSlice';
 import axios from 'axios'
+import { fetchCart } from '../../redux/slices/cartSlice';
 
 
 const Checkout = () => {
@@ -26,12 +27,18 @@ const Checkout = () => {
   })
   
 
+  // console.log("This is the cart : that is loading :" , cart);
+
   // ensure that cart is not loading before proceeding
   useEffect(()=>{
-    if(!cart || !cart.products || cart.products.length ===0 ){
+    if(!cart || !cart.products || cart.products.length === 0 ){
       navigateTo("/");
     }
-  } , [cart ,navigateTo])
+  } , [cart , navigateTo])
+
+  // useEffect(()=>{
+  //   alert("Click here to proceed");
+  // } , []);
 
   const [checkoutId , setCheckoutId] = useState(null);
 
@@ -107,7 +114,9 @@ const Checkout = () => {
   }
 
   if(loading)return <p>Loading cart .....</p>
-  if(error) return <p>Error : {error}</p>
+  if(cart?.products?.length===0){
+    if(error) return <p>Error : {error}</p>
+  }
 
   if(!cart || !cart.products || !cart.products.length===0){
     return <p>Your cart is empty !</p>
