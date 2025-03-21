@@ -38,7 +38,7 @@ export const updateUser = createAsyncThunk("admin/updateUser" , async({id , name
       Authorization:`Bearer ${localStorage.getItem("userToken")}`
     }
   });
-  response.data;
+  return response.data.user;
 })
 
 //delete a user

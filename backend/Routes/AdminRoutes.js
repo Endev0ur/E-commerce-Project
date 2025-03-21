@@ -34,7 +34,7 @@ router.post("/" , protect , admin , async (req , res)=>{
 
     let user = await User.findOne({email});
     if(user){
-      res.status(400).json({
+      return res.status(400).json({
         message : "User already exist",
       });
     }
@@ -96,7 +96,7 @@ router.put("/:id" , protect , admin , async(req , res)=> {
 router.delete("/:id" , protect , admin , async (req , res)=> {
   try{
 
-    const user = User.findById(req.params.id);
+    const user = await User.findById(req.params.id);
     if(user){
       await user.deleteOne();
       res.json({

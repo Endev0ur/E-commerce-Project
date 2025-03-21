@@ -21,6 +21,7 @@ const AdminHomePage = () => {
       <h1 className="text-3xl font-bold mb-6">
         Admin Dashboard
       </h1>
+      
       {productsLoading || ordersLoading ? (<p>Loading .... </p>):productsError?(<p className='text-red-500'> Error getching products : {productsError}</p>):ordersError ? (<p>Error fetching orders : {ordersError} </p>) : (
 
       

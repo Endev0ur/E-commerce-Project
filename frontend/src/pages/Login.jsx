@@ -13,7 +13,7 @@ const Login = () => {
   const navigateTo = useNavigate();
   const location = useLocation();
 
-  const {user , guestId} = useSelector((state)=>state.auth);
+  const {user , guestId , loading , error} = useSelector((state)=>state.auth);
 
   const {cart} = useSelector((state)=>state.cart);
 
@@ -21,6 +21,8 @@ const Login = () => {
   const redirect = new URLSearchParams(location.search).get("redirect")||"/";
 
   const isCheckoutRedirect = redirect.includes("checkout");
+
+
 
   useEffect(()=> {
     if(user){
@@ -91,7 +93,7 @@ const Login = () => {
             type="submit"
             className="w-full bg-black text-white p-2 rounded-lg font-semibold hover:bg-gray-800 transition"
           >
-            Sign in
+            {loading ? "loading...":"Sign In"}
           </button>
           <p className="mt-6 text-center text-sm">
             Don't have an account?{" "}

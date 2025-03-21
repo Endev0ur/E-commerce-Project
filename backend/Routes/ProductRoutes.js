@@ -174,7 +174,7 @@ router.delete("/:id" , protect , admin , async (req , res)=> {
 
   }
   catch(err){
-    console.log(error);
+    console.log(err);
     res.status(500).send("Server error");
   }
 });

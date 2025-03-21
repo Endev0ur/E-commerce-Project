@@ -29,7 +29,7 @@ export const createProduct = createAsyncThunk("adminProducts/createProduct" , as
 
 //async thunk to update an existing product
 export const updateProduct = createAsyncThunk("adminProduct/updateProduct" , async ({id , productData })=>{
-  const response = await axios.put(`${API_URL}/api/admin/products/${id}` , 
+  const response = await axios.put(`${API_URL}/api/products/${id}` , 
     productData , 
     {
       headers:{
@@ -42,8 +42,8 @@ export const updateProduct = createAsyncThunk("adminProduct/updateProduct" , asy
 
 
 //async thunk to delete the proudct
-export const deleteProduct = createAsyncThunk("adminProduct/deleteProduct" , async ({id})=>{
-  const response = await axios.delete(`${API_URL}/api/admin/products/${id}` , 
+export const deleteProduct = createAsyncThunk("adminProduct/deleteProduct" , async (id)=>{
+  const response = await axios.delete(`${API_URL}/api/products/${id}` , 
     
     {
       headers:{
