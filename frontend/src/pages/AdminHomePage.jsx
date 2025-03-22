@@ -65,7 +65,7 @@ const AdminHomePage = () => {
                 orders.map((order)=> (
                   <tr key={order._id} className='border-b hover:bg-gray-50 cursor-pointer'>
                     <td className="p-5">{order._id}</td>
-                    <td className="p-5">{order.user.name}</td>
+                    <td className="p-5">{order.user ? order.user.name : "Unknown User"}</td>
                     <td className="p-5">{order.totalPrice.toFixed(2)}</td>
                     <td className="p-5">{order.status}</td>
                   </tr>
